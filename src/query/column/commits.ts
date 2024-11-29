@@ -8,7 +8,7 @@ export const CommitColumns: ColumnsMap  = {
 		cell: (tableRow, el) => {
             const row = tableRow as CommitSearchResponse["items"][number];
 			el.classList.add("github-link-table-commit-sha");
-			el.createEl("a", { text: `#${row.sha.slice(0,7)}`, href: row.html_url, attr: { target: "_blank" } });
+			el.createEl("a", { text: `${row.sha.slice(0,7)}`, href: row.html_url, attr: { target: "_blank" } });
 		},
 	},
     title: {

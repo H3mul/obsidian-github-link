@@ -1,4 +1,4 @@
-import { getSearchResultIssueStatus, IssueSearchResponse, IssueStatus } from "../../github/response";
+import { getSearchResultIssueStatus, type IssueSearchResponse, IssueStatus } from "../../github/response";
 import { setPRIcon } from "../../icon";
 import { titleCase } from "../../util";
 import { CommonIssuePRColumns, type ColumnsMap } from "./base";

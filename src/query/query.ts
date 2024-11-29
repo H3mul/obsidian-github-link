@@ -13,7 +13,6 @@ import { getProp, isEqual, titleCase } from "../util";
 import { ALL_COLUMNS, DEFAULT_COLUMNS } from "./column/defaults";
 import type { QueryParams, TableResult } from "./types";
 import { OutputType, QueryType } from "./types";
-import { ColumnGetter } from "./column/base";
 
 export class GithubQuery {
 	private params!: QueryParams;
@@ -66,16 +65,16 @@ export class GithubQuery {
 	public async executeQuery(skipCache = false): Promise<MaybePaginated<TableResult> | null> {
 		const params = this.params;
 		if (params.outputType === OutputType.Table) {
-			// Custom Query
+			// Custom Issue/Pull-request Query
 			if (params.query && (params.queryType === QueryType.Issue || params.queryType === QueryType.PullRequest)) {
 				const { meta, response } = await searchIssues(params, params.query, params.org, skipCache);
 				return { meta, response: response.items };
 			}
+			// Custom Commit Query
 			else if (params.query && (params.queryType === QueryType.Commit)) {
 				const { meta, response } = await searchCommits(params, params.query, params.org, skipCache);
 				return { meta, response: response.items };
 			}
-
 			// Issue query with org and repo provided
 			else if (params.queryType === QueryType.Issue && params.org && params.repo) {
 				return await getIssuesForRepo(params, params.org, params.repo, skipCache);
@@ -145,7 +144,7 @@ export class GithubQuery {
 
 	private renderCell(tr: HTMLTableRowElement, queryType: QueryType, column: string, row: TableResult[number]): void {
 		const cell = tr.createEl("td");
-		const renderer = ALL_COLUMNS[queryType][column] as ColumnGetter<TableResult[number]>;
+		const renderer = ALL_COLUMNS[queryType][column];
 		if (renderer) {
 			void renderer.cell(row, cell);
 		} else {

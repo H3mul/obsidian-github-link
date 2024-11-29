@@ -3,8 +3,10 @@
 import { parseUrl, repoAPIToBrowserUrl } from "../../github/url-parse";
 
 import { DateFormat } from "../../util";
-import type { IssueListResponse, UserResponse } from "../../github/response";
-import type { IssuePullTableResult, TableResult } from "../types";
+import type { IssueListResponse, IssueSearchResponse, PullListResponse, UserResponse } from "../../github/response";
+import type { TableResult } from "../types";
+
+export type IssuePullTableResult = IssueSearchResponse["items"] | IssueListResponse | PullListResponse;
 
 export interface ColumnGetter<T> {
 	header: string;

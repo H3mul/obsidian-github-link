@@ -1,4 +1,4 @@
-import { CommitSearchResponse } from "../../github/response";
+import type { CommitSearchResponse } from "../../github/response";
 import { parseUrl, repoAPIToBrowserUrl } from "../../github/url-parse";
 import { DateCell, UserCell, type ColumnsMap } from "./base";
 

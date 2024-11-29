@@ -1,6 +1,8 @@
-import type { IssueListResponse, IssueSearchResponse, PullListResponse } from "../github/response";
+import type { IssueListResponse, IssueSearchResponse, PullListResponse, CommitSearchResponse } from "../github/response";
 
-export type TableResult = IssueSearchResponse["items"] | IssueListResponse | PullListResponse;
+export type IssuePullTableResult = IssueSearchResponse["items"] | IssueListResponse | PullListResponse;
+export type TableResult = IssuePullTableResult | CommitSearchResponse["items"];
+
 
 export enum OutputType {
 	Table = "table",
@@ -10,6 +12,7 @@ export enum QueryType {
 	PullRequest = "pull-request",
 	Issue = "issue",
 	Repo = "repo",
+	Commit = "commit",
 }
 
 export interface BaseParams {

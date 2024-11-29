@@ -4,7 +4,7 @@ import { parseUrl, repoAPIToBrowserUrl } from "../../github/url-parse";
 
 import { DateFormat } from "../../util";
 import type { IssueListResponse, UserResponse } from "../../github/response";
-import type { TableResult } from "../types";
+import type { IssuePullTableResult, TableResult } from "../types";
 
 export interface ColumnGetter<T> {
 	header: string;
@@ -46,53 +46,61 @@ export function UserCell(user: UserResponse, el: HTMLElement): void {
 export const CommonIssuePRColumns: ColumnsMap = {
 	number: {
 		header: "Number",
-		cell: (row, el) => {
+		cell: (tableRow, el) => {
+            const row = tableRow as IssuePullTableResult[number];
 			el.classList.add("github-link-table-issue-number");
 			el.createEl("a", { text: `#${row.number}`, href: row.html_url, attr: { target: "_blank" } });
 		},
 	},
 	repo: {
 		header: "Repo",
-		cell: (row, el) => {
+		cell: (tableRow, el) => {
+            const row = tableRow as IssueListResponse[number];
 			el.classList.add("github-link-table-repo");
-			const url = repoAPIToBrowserUrl((row as IssueListResponse[number]).repository_url);
+			const url = repoAPIToBrowserUrl(row.repository_url);
 			const parsed = parseUrl(url);
 			el.createEl("a", { text: parsed?.repo ?? "Repo", href: url, attr: { target: "_blank" } });
 		},
 	},
 	author: {
 		header: "Author",
-		cell: (row, el) => {
+		cell: (tableRow, el) => {
+            const row = tableRow as IssuePullTableResult[number];
 			UserCell(row.user, el);
 		},
 	},
 	assignee: {
 		header: "Assignee",
-		cell: (row, el) => {
+		cell: (tableRow, el) => {
+            const row = tableRow as IssuePullTableResult[number];
 			UserCell(row.assignee, el);
 		},
 	},
 	created: {
 		header: "Created",
-		cell: (row, el) => {
+		cell: (tableRow, el) => {
+            const row = tableRow as IssuePullTableResult[number];
 			DateCell(row.created_at, el);
 		},
 	},
 	updated: {
 		header: "Updated",
-		cell: (row, el) => {
+		cell: (tableRow, el) => {
+            const row = tableRow as IssuePullTableResult[number];
 			DateCell(row.updated_at, el);
 		},
 	},
 	closed: {
 		header: "Closed",
-		cell: (row, el) => {
+		cell: (tableRow, el) => {
+            const row = tableRow as IssuePullTableResult[number];
 			DateCell(row.closed_at, el);
 		},
 	},
 	labels: {
 		header: "Labels",
-		cell: (row, el) => {
+		cell: (tableRow, el) => {
+            const row = tableRow as IssuePullTableResult[number];
 			const wrapper = el.createDiv({ cls: "github-link-table-labels" });
 			for (const label of row.labels ?? []) {
 				// When would the label just be a string?

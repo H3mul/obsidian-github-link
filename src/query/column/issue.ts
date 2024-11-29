@@ -12,7 +12,7 @@ export const IssueColumns: ColumnsMap = {
 		header: "Status",
 		cell: (row, el) => {
 			const wrapper = el.createDiv({ cls: "github-link-table-status" });
-			const status = getSearchResultIssueStatus(row);
+			const status = getSearchResultIssueStatus(row as IssueSearchResponse["items"][number]);
 			const icon = wrapper.createSpan({ cls: "github-link-status-icon" });
 			setIssueIcon(icon, status);
 			wrapper.createSpan({

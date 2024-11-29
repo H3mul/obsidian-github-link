@@ -1,6 +1,7 @@
 import { parseYaml, setIcon } from "obsidian";
 import {
 	searchIssues,
+	searchCommits,
 	getIssuesForRepo,
 	getMyIssues,
 	getPullRequestsForRepo,
@@ -12,6 +13,7 @@ import { getProp, isEqual, titleCase } from "../util";
 import { ALL_COLUMNS, DEFAULT_COLUMNS } from "./column/defaults";
 import type { QueryParams, TableResult } from "./types";
 import { OutputType, QueryType } from "./types";
+import { ColumnGetter } from "./column/base";
 
 export class GithubQuery {
 	private params!: QueryParams;
@@ -69,6 +71,11 @@ export class GithubQuery {
 				const { meta, response } = await searchIssues(params, params.query, params.org, skipCache);
 				return { meta, response: response.items };
 			}
+			else if (params.query && (params.queryType === QueryType.Commit)) {
+				const { meta, response } = await searchCommits(params, params.query, params.org, skipCache);
+				return { meta, response: response.items };
+			}
+
 			// Issue query with org and repo provided
 			else if (params.queryType === QueryType.Issue && params.org && params.repo) {
 				return await getIssuesForRepo(params, params.org, params.repo, skipCache);
@@ -138,7 +145,7 @@ export class GithubQuery {
 
 	private renderCell(tr: HTMLTableRowElement, queryType: QueryType, column: string, row: TableResult[number]): void {
 		const cell = tr.createEl("td");
-		const renderer = ALL_COLUMNS[queryType][column];
+		const renderer = ALL_COLUMNS[queryType][column] as ColumnGetter<TableResult[number]>;
 		if (renderer) {
 			void renderer.cell(row, cell);
 		} else {

@@ -35,6 +35,7 @@ export interface MaybePaginated<T> {
 export type IssueResponse = RestEndpointMethodTypes["issues"]["get"]["response"]["data"];
 export type IssueListResponse = RestEndpointMethodTypes["issues"]["list"]["response"]["data"];
 export type IssueSearchResponse = RestEndpointMethodTypes["search"]["issuesAndPullRequests"]["response"]["data"];
+export type CommitSearchResponse = RestEndpointMethodTypes["search"]["commits"]["response"]["data"];
 export type PullResponse = RestEndpointMethodTypes["pulls"]["get"]["response"]["data"];
 export type PullListResponse = RestEndpointMethodTypes["pulls"]["list"]["response"]["data"];
 export type CodeResponse = RestEndpointMethodTypes["repos"]["getContent"]["response"]["data"];
@@ -70,6 +71,9 @@ export type PullListParams = PaginationParams & {
 	sort?: "created" | "updated" | "popularity" | "long-running";
 	direction?: "asc" | "desc";
 };
+
+export type CommitSearchParams = RestEndpointMethodTypes["search"]["commits"]["parameters"];
+
 export type IssueSearchParams = RestEndpointMethodTypes["search"]["issuesAndPullRequests"]["parameters"];
 
 export function getSearchResultIssueStatus(

@@ -7,6 +7,8 @@ import type { QueryParams } from "../query/types";
 import { GitHubApi } from "./api";
 import type {
 	CheckRunListResponse,
+	CommitSearchParams,
+	CommitSearchResponse,
 	IssueListParams,
 	IssueListResponse,
 	IssueResponse,
@@ -146,6 +148,28 @@ export function listCheckRunsForRef(
 	skipCache = false,
 ): Promise<CheckRunListResponse> {
 	return api.listCheckRunsForRef(org, repo, ref, getToken(org), skipCache);
+}
+
+export async function searchCommits(
+	params: QueryParams,
+	query: string,
+	org?: string,
+	skipCache = false,
+): Promise<MaybePaginated<CommitSearchResponse>> {
+	const searchParams = mapObject<QueryParams, CommitSearchParams>(
+		params,
+		{
+			q: () => query,
+			order: (params) => params.order,
+			page: (params) => params.page,
+			per_page: (params) => params.per_page,
+		},
+		true,
+		true,
+	);
+
+	setPageSize(searchParams);
+	return api.searchCommits(searchParams, getToken(org, query), skipCache);
 }
 
 export async function searchIssues(

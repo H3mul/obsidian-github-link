@@ -12,6 +12,8 @@ import type {
 	IssueResponse,
 	IssueSearchParams,
 	IssueSearchResponse,
+    CommitSearchParams,
+	CommitSearchResponse,
 	LinkMeta,
 	MaybePaginated,
 	PaginationMeta,
@@ -185,6 +187,16 @@ export class GitHubApi {
 		const url = this.addParams(`${GitHubApi.baseApi}/search/issues`, params);
 		const { meta, response } = await this.queueRequest({ url }, token, skipCache);
 		return { meta, response: response.json as IssueSearchResponse };
+	}
+
+	public async searchCommits(
+		params: CommitSearchParams,
+		token?: string,
+		skipCache = false,
+	): Promise<MaybePaginated<CommitSearchResponse>> {
+		const url = this.addParams(`${GitHubApi.baseApi}/search/commits`, params);
+		const { meta, response } = await this.queueRequest({ url }, token, skipCache);
+		return { meta, response: response.json as CommitSearchResponse };
 	}
 
 	public async listCheckRunsForRef(

@@ -59,7 +59,8 @@ export interface QueryParams {
 	/**
 	 * "comments" - Issues only
 	 * "popularity", "long-running" - Pull requests only
-	 * "reactions" and "interactions" - Search only
+	 * "reactions" and "interactions" - Issue Search only
+	 * "author-date" and "committer-date" - Commmit Search only
 	 */
 	sort?:
 		| "created"
@@ -74,7 +75,9 @@ export interface QueryParams {
 		| "reactions-thinking_face"
 		| "reactions-heart"
 		| "reactions-tada"
-		| "interactions";
+		| "interactions"
+		| "author-date"
+		| "committer-date";
 
 	/**
 	 * Sort direction, for most queries

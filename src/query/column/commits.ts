@@ -4,7 +4,7 @@ import { DateCell, UserCell, type ColumnsMap } from "./base";
 
 export const CommitColumns: ColumnsMap  = {
 	number: {
-		header: "Number",
+		header: "SHA",
 		cell: (tableRow, el) => {
             const row = tableRow as CommitSearchResponse["items"][number];
 			el.classList.add("github-link-table-commit-sha");

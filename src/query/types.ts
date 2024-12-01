@@ -1,6 +1,6 @@
-import type { IssueListResponse, IssueSearchResponse, PullListResponse, CommitSearchResponse } from "../github/response";
+import type { IssueListResponse, IssueSearchResponse, PullListResponse, CommitSearchResponse, CommitListResponse } from "../github/response";
 
-export type TableResult = IssueSearchResponse["items"] | IssueListResponse | PullListResponse | CommitSearchResponse["items"];
+export type TableResult = IssueSearchResponse["items"] | IssueListResponse | PullListResponse | CommitSearchResponse["items"] | CommitListResponse;
 
 export enum OutputType {
 	Table = "table",
@@ -88,6 +88,7 @@ export interface QueryParams {
 	 */
 	order?: "asc" | "desc";
 	since?: string;
+	until?: string
 
 	/**
 	 * Issue filter type
@@ -103,4 +104,12 @@ export interface QueryParams {
 	 * Pull request target
 	 */
 	base?: string;
+
+	/**
+	 * Commit list request parameters
+	 */
+	sha?: string;
+	path?: string;
+	author?: string;
+	committer?: string;
 }

@@ -36,6 +36,7 @@ export type IssueResponse = RestEndpointMethodTypes["issues"]["get"]["response"]
 export type IssueListResponse = RestEndpointMethodTypes["issues"]["list"]["response"]["data"];
 export type IssueSearchResponse = RestEndpointMethodTypes["search"]["issuesAndPullRequests"]["response"]["data"];
 export type CommitSearchResponse = RestEndpointMethodTypes["search"]["commits"]["response"]["data"];
+export type CommitListResponse = RestEndpointMethodTypes["repos"]["listCommits"]["response"]["data"];
 export type PullResponse = RestEndpointMethodTypes["pulls"]["get"]["response"]["data"];
 export type PullListResponse = RestEndpointMethodTypes["pulls"]["list"]["response"]["data"];
 export type CodeResponse = RestEndpointMethodTypes["repos"]["getContent"]["response"]["data"];
@@ -73,6 +74,14 @@ export type PullListParams = PaginationParams & {
 };
 
 export type CommitSearchParams = RestEndpointMethodTypes["search"]["commits"]["parameters"];
+export type CommitListParams = PaginationParams & {
+	sha?: string;	
+	path?: string;	
+	author?: string;	
+	committer?: string;	
+	since?: string;	
+	until?: string;	
+};
 
 export type IssueSearchParams = RestEndpointMethodTypes["search"]["issuesAndPullRequests"]["parameters"];
 

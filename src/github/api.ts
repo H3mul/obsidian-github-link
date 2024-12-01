@@ -20,6 +20,8 @@ import type {
 	PullListParams,
 	PullListResponse,
 	PullResponse,
+	CommitListParams,
+	CommitListResponse,
 } from "./response";
 import type { CacheEntry } from "./cache";
 
@@ -197,6 +199,18 @@ export class GitHubApi {
 		const url = this.addParams(`${GitHubApi.baseApi}/search/commits`, params);
 		const { meta, response } = await this.queueRequest({ url }, token, skipCache);
 		return { meta, response: response.json as CommitSearchResponse };
+	}
+	
+	public async listCommits(
+		org: string,
+		repo: string,
+		params: CommitListParams = {},
+		token?: string,
+		skipCache = false,
+	): Promise<MaybePaginated<CommitListResponse>> {
+		const url = this.addParams(`${GitHubApi.baseApi}/repos/${org}/${repo}/commits`, params as Record<string, unknown>);
+		const { meta, response } = await this.queueRequest({ url }, token, skipCache);
+		return { meta, response: response.json as CommitListResponse };
 	}
 
 	public async listCheckRunsForRef(

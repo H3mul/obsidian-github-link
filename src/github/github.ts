@@ -2,11 +2,13 @@ import { RequestError, mapObject } from "../util";
 
 import type { GithubAccount } from "../settings";
 import { PluginSettings } from "../plugin";
-import { issueListSortFromQuery, pullListSortFromQuery, searchSortFromQuery } from "../query/sort";
+import { commitSearchSortFromQuery, issueListSortFromQuery, issueSearchSortFromQuery, pullListSortFromQuery } from "../query/sort";
 import type { QueryParams } from "../query/types";
 import { GitHubApi } from "./api";
 import type {
 	CheckRunListResponse,
+	CommitListParams,
+	CommitListResponse,
 	CommitSearchParams,
 	CommitSearchResponse,
 	IssueListParams,
@@ -21,6 +23,7 @@ import type {
 	PullResponse,
 	TimelineCrossReferencedEvent,
 } from "./response";
+import { parseFrontMatterStringArray } from "obsidian";
 
 // TODO: Refactor this whole file into a class for better use in dataview queries, etc
 
@@ -47,6 +50,18 @@ function getToken(org?: string, query?: string): string | undefined {
 
 	const account = getAccount(_org);
 	return account?.token;
+}
+
+/**
+ * Utility function: automatically add supported commit search query parameters from input parameters
+ */
+function commitSearchQueryFromParams(params: QueryParams) {
+	const query = [params.query];
+
+	params.org 	&& query.push("org:" + params.org);
+	params.repo && query.push("repo:" + params.repo);
+
+	return query.join(" ");
 }
 
 export function getIssue(org: string, repo: string, issue: number, skipCache = false): Promise<IssueResponse> {
@@ -150,6 +165,32 @@ export function listCheckRunsForRef(
 	return api.listCheckRunsForRef(org, repo, ref, getToken(org), skipCache);
 }
 
+export function getCommitsForRepo(
+	params: QueryParams,
+	org: string,
+	repo: string,
+	skipCache = false,
+): Promise<MaybePaginated<CommitListResponse>> {
+	const listParams = mapObject<QueryParams, CommitListParams>(
+		params,
+		{
+			sha: true,
+			path: true,
+			author: true,
+			committer: true,
+			since: true,
+			until: true,
+			page: true,
+			per_page: true,
+		},
+		true,
+		true,
+	);
+
+	setPageSize(listParams);
+	return api.listCommits(org, repo, listParams, getToken(org), skipCache);
+}
+
 export async function searchCommits(
 	params: QueryParams,
 	query: string,
@@ -159,7 +200,8 @@ export async function searchCommits(
 	const searchParams = mapObject<QueryParams, CommitSearchParams>(
 		params,
 		{
-			q: () => query,
+			q: () => commitSearchQueryFromParams(params),
+			sort: (params) => commitSearchSortFromQuery(params),
 			order: (params) => params.order,
 			page: (params) => params.page,
 			per_page: (params) => params.per_page,
@@ -182,7 +224,7 @@ export async function searchIssues(
 		params,
 		{
 			q: () => query,
-			sort: (params) => searchSortFromQuery(params),
+			sort: (params) => issueSearchSortFromQuery(params),
 			order: (params) => params.order,
 			page: (params) => params.page,
 			per_page: (params) => params.per_page,

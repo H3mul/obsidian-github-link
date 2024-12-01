@@ -6,6 +6,7 @@ import {
 	getMyIssues,
 	getPullRequestsForRepo,
 	getIssuesForOrganization,
+	getCommitsForRepo,
 } from "../github/github";
 import type { MaybePaginated, PaginationMeta } from "../github/response";
 import { PluginSettings } from "../plugin";
@@ -91,6 +92,10 @@ export class GithubQuery {
 			// Pull request query with org and repo provided
 			else if (params.queryType === QueryType.PullRequest && params.org && params.repo) {
 				return await getPullRequestsForRepo(params, params.org, params.repo, skipCache);
+			}
+			// Commit query with org and repo provided
+			else if (params.queryType === QueryType.Commit && params.org && params.repo) {
+				return await getCommitsForRepo(params, params.org, params.repo, skipCache);
 			}
 		}
 		return null;
